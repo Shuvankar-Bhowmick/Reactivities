@@ -1,4 +1,5 @@
 
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -11,7 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(opt => {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    );
 });
 
 var app = builder.Build();
@@ -27,6 +30,23 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+// using: when we're done with the scope everything inside it will be cleaned and erased from memory. 
+using var scope = app.Services.CreateScope();
+// retrieves the IServiceProvider from the created scope. The service provider is responsible for resolving and providing instances of registered services.
+var services = scope.ServiceProvider;
+
+try {
+    // Retrieved an instance of "DataContext" from the service provider.
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedData(context);
+}
+catch(Exception ex){
+    // Retrieves an instance of the logger for the Program class.
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during migration");
+}
 
 app.Run();
 
