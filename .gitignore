@@ -80,7 +80,6 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
-*.dll
 *.iobj
 *.pch
 *.pdb
@@ -103,6 +102,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.cache
 
 # Chutzpah Test files
 _Chutzpah*
