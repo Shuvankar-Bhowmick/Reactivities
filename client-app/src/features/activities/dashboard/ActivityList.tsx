@@ -14,9 +14,13 @@ import { Activity } from "../../../app/models/activity";
 
 interface Props {
   activities: Activity[];
+  handleSelectedActivity: (id: string) => void;
 }
 
-export default function ActivityList({ activities }: Props) {
+export default function ActivityList({
+  activities,
+  handleSelectedActivity,
+}: Props) {
   return (
     <Segment>
       <ItemGroup divided>
@@ -32,7 +36,11 @@ export default function ActivityList({ activities }: Props) {
                 </div>
               </ItemDescription>
               <ItemExtra>
-                <Button floated="right" color="blue">
+                <Button
+                  floated="right"
+                  color="blue"
+                  onClick={() => handleSelectedActivity(activity.id)}
+                >
                   View
                 </Button>
                 <Label basic>{activity.category}</Label>

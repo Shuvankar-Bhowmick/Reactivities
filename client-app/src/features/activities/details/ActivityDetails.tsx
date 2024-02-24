@@ -12,11 +12,15 @@ import { Activity } from "../../../app/models/activity";
 
 interface Props {
   activity: Activity;
+  handleCancelSelectedActivity: () => void;
 }
 
-export default function ActivityDetails({ activity }: Props) {
+export default function ActivityDetails({
+  activity,
+  handleCancelSelectedActivity,
+}: Props) {
   return (
-    <Card>
+    <Card fluid>
       <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
       <CardContent>
         <CardHeader>{activity.title}</CardHeader>
@@ -30,7 +34,7 @@ export default function ActivityDetails({ activity }: Props) {
           <Button basic color="blue">
             Edit
           </Button>
-          <Button basic color="grey">
+          <Button basic color="grey" onClick={handleCancelSelectedActivity}>
             Cancel
           </Button>
         </ButtonGroup>
