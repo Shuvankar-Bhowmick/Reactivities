@@ -1,7 +1,7 @@
 import { Button, Container, Menu } from "semantic-ui-react";
 
 interface Props {
-  onFormOpen: (id?: null) => void;
+  onFormOpen: (id?: string | undefined) => void;
 }
 
 export default function NavBar({ onFormOpen }: Props) {
@@ -21,7 +21,7 @@ export default function NavBar({ onFormOpen }: Props) {
           <Button
             positive
             content="Create Activity"
-            onClick={() => onFormOpen(null)}
+            onClick={() => onFormOpen(undefined)}
           />
         </Menu.Item>
       </Container>
