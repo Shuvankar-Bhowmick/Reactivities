@@ -7,8 +7,11 @@ import ActivityForm from "../form/ActivityForm";
 interface Props {
   activities: Activity[];
   selectedActivity: Activity | undefined;
+  editMode: boolean;
   onHandleSelectedActivity: (id: string) => void;
   onHandleCancelSelectedActivity: () => void;
+  onFormOpen: (id: string) => void;
+  onFormClose: () => void;
 }
 
 export default function ActivityDashboard({
@@ -16,6 +19,9 @@ export default function ActivityDashboard({
   selectedActivity,
   onHandleSelectedActivity: handleSelectedActivity,
   onHandleCancelSelectedActivity: handleCancelSelectedActivity,
+  editMode,
+  onFormOpen,
+  onFormClose,
 }: Props) {
   return (
     <Grid>
@@ -32,9 +38,12 @@ export default function ActivityDashboard({
           <ActivityDetails
             handleCancelSelectedActivity={handleCancelSelectedActivity}
             activity={selectedActivity}
+            onFormOpen={onFormOpen}
           />
         )}
-        <ActivityForm />
+        {editMode && (
+          <ActivityForm onFormClose={onFormClose} activity={selectedActivity} />
+        )}
       </GridColumn>
     </Grid>
   );

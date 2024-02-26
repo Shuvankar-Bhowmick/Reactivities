@@ -5,8 +5,14 @@ import {
   FormTextArea,
   Segment,
 } from "semantic-ui-react";
+import { Activity } from "../../../app/models/activity";
 
-export default function ActivityForm() {
+interface Props {
+  activity: Activity | undefined;
+  onFormClose: () => void;
+}
+
+export default function ActivityForm({ activity, onFormClose }: Props) {
   return (
     <Segment clearing>
       <Form>
@@ -19,7 +25,7 @@ export default function ActivityForm() {
         <Button floated="right" positive type="submit">
           Submit
         </Button>
-        <Button floated="right" type="button">
+        <Button floated="right" type="button" onClick={onFormClose}>
           Cancel
         </Button>
       </Form>

@@ -10,6 +10,7 @@ function App() {
   const [selectedActivity, setSelectedActivity] = useState<
     Activity | undefined
   >(undefined);
+  const [editMode, setEditMode] = useState(false);
 
   function handleSelectedActivity(id: string) {
     setSelectedActivity(activities.find(a => a.id === id));
@@ -17,6 +18,16 @@ function App() {
 
   function handleCancelSelectedActivity() {
     setSelectedActivity(undefined);
+  }
+
+  function handleFormOpen(id?: string) {
+    console.log(id);
+    id ? handleSelectedActivity(id) : handleCancelSelectedActivity(); // is equivalent to if (id) handleSelectedActivity(id), id is NEVER null
+    setEditMode(true);
+  }
+
+  function handleFormClose() {
+    setEditMode(false);
   }
 
   useEffect(() => {
@@ -29,13 +40,16 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      <NavBar onFormOpen={handleFormOpen} />
       <Container style={{ marginTop: "7rem" }}>
         <ActivityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
           onHandleSelectedActivity={handleSelectedActivity}
           onHandleCancelSelectedActivity={handleCancelSelectedActivity}
+          editMode={editMode}
+          onFormOpen={handleFormOpen}
+          onFormClose={handleFormClose}
         />
       </Container>
     </>

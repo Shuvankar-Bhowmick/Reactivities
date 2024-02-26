@@ -13,11 +13,13 @@ import { Activity } from "../../../app/models/activity";
 interface Props {
   activity: Activity;
   handleCancelSelectedActivity: () => void;
+  onFormOpen: (id: string) => void;
 }
 
 export default function ActivityDetails({
   activity,
   handleCancelSelectedActivity,
+  onFormOpen,
 }: Props) {
   return (
     <Card fluid>
@@ -31,7 +33,7 @@ export default function ActivityDetails({
       </CardContent>
       <CardContent extra>
         <ButtonGroup widths="3">
-          <Button basic color="blue">
+          <Button basic color="blue" onClick={() => onFormOpen(activity.id)}>
             Edit
           </Button>
           <Button basic color="grey" onClick={handleCancelSelectedActivity}>
