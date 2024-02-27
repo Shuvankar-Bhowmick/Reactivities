@@ -11,11 +11,13 @@ import { ChangeEvent, FormEvent, useState } from "react";
 interface Props {
   activity: Activity | undefined;
   onFormClose: () => void;
+  onCreateOrEditActivity: (activity: Activity) => void;
 }
 
 export default function ActivityForm({
   activity: selectedActivity,
   onFormClose,
+  onCreateOrEditActivity,
 }: Props) {
   const initialState = selectedActivity ?? {
     id: "",
@@ -31,8 +33,7 @@ export default function ActivityForm({
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(activity);
-    setActivity;
+    onCreateOrEditActivity(activity);
   }
 
   function handleOnChange(
