@@ -13,6 +13,7 @@ interface Props {
   onFormOpen: (id: string) => void;
   onFormClose: () => void;
   onCreateOrEditActivity: (activity: Activity) => void;
+  onHandleDeleteActivity: (id: string) => void;
 }
 
 export default function ActivityDashboard({
@@ -24,6 +25,7 @@ export default function ActivityDashboard({
   onFormOpen,
   onFormClose,
   onCreateOrEditActivity,
+  onHandleDeleteActivity,
 }: Props) {
   return (
     <Grid>
@@ -32,6 +34,7 @@ export default function ActivityDashboard({
           <ActivityList
             handleSelectedActivity={handleSelectedActivity}
             activities={activities}
+            handleDeleteActivity={onHandleDeleteActivity}
           />
         </List>
       </GridColumn>

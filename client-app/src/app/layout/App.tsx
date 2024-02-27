@@ -43,6 +43,12 @@ function App() {
     setSelectedActivity(activity);
   }
 
+  function handleDeleteActivity(id: string) {
+    if (selectedActivity?.id === id) handleCancelSelectedActivity();
+
+    setActivities(activities.filter(x => x.id !== id));
+  }
+
   useEffect(() => {
     axios
       .get<Activity[]>("http://localhost:5000/api/activities")
@@ -64,6 +70,7 @@ function App() {
           editMode={editMode}
           onFormOpen={handleFormOpen}
           onFormClose={handleFormClose}
+          onHandleDeleteActivity={handleDeleteActivity}
         />
       </Container>
     </>
