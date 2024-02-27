@@ -34,7 +34,7 @@ export default function ActivityDashboard({
         </List>
       </GridColumn>
       <GridColumn width="6">
-        {selectedActivity && (
+        {selectedActivity && !editMode && (
           <ActivityDetails
             handleCancelSelectedActivity={handleCancelSelectedActivity}
             activity={selectedActivity}
