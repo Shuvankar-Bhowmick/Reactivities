@@ -10,12 +10,14 @@ import { ChangeEvent, FormEvent, useState } from "react";
 
 interface Props {
   activity: Activity | undefined;
+  submitting: boolean;
   onFormClose: () => void;
   onCreateOrEditActivity: (activity: Activity) => void;
 }
 
 export default function ActivityForm({
   activity: selectedActivity,
+  submitting,
   onFormClose,
   onCreateOrEditActivity,
 }: Props) {
@@ -66,6 +68,7 @@ export default function ActivityForm({
         ></FormInput>
         <FormInput
           name="date"
+          type="date"
           placeholder="Date"
           value={activity.date}
           onChange={handleOnChange}
@@ -82,7 +85,7 @@ export default function ActivityForm({
           value={activity.venue}
           onChange={handleOnChange}
         ></FormInput>
-        <Button floated="right" positive type="submit">
+        <Button loading={submitting} floated="right" positive type="submit">
           Submit
         </Button>
         <Button floated="right" type="button" onClick={onFormClose}>

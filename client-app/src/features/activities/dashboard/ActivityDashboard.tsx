@@ -8,6 +8,7 @@ interface Props {
   activities: Activity[];
   selectedActivity: Activity | undefined;
   editMode: boolean;
+  submitting: boolean;
   onHandleSelectedActivity: (id: string) => void;
   onHandleCancelSelectedActivity: () => void;
   onFormOpen: (id: string) => void;
@@ -19,6 +20,7 @@ interface Props {
 export default function ActivityDashboard({
   activities,
   selectedActivity,
+  submitting,
   onHandleSelectedActivity: handleSelectedActivity,
   onHandleCancelSelectedActivity: handleCancelSelectedActivity,
   editMode,
@@ -48,6 +50,7 @@ export default function ActivityDashboard({
         )}
         {editMode && (
           <ActivityForm
+            submitting={submitting}
             onCreateOrEditActivity={onCreateOrEditActivity}
             onFormClose={onFormClose}
             activity={selectedActivity}
