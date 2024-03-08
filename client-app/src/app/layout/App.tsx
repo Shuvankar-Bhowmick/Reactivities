@@ -6,26 +6,21 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 import { v4 as uuid } from "uuid";
 import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
+import { useStore } from "../stores/store";
+import { observer } from "mobx-react-lite";
 
 function App() {
+  const { activityStore } = useStore();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<
     Activity | undefined
   >(undefined);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    agent.Activites.list().then(response => {
-      const activities: Activity[] = response.map(activity => {
-        const date = activity.date.split("T")[0];
-        return { ...activity, date };
-      });
-      setActivities(activities);
-      setLoading(false);
-    });
-  }, []);
+    activityStore.loadActivities();
+  }, [activityStore]);
 
   function handleSelectedActivity(id: string) {
     setSelectedActivity(activities.find(a => a.id === id));
@@ -80,7 +75,8 @@ function App() {
 
     if (selectedActivity?.id === id) handleCancelSelectedActivity();
   }
-  if (loading) return <LoadingComponent content="Loading app" />;
+  if (activityStore.loadingInitial)
+    return <LoadingComponent content="Loading app" />;
 
   return (
     <>
@@ -88,7 +84,7 @@ function App() {
       <Container style={{ marginTop: "7rem" }}>
         <ActivityDashboard
           onCreateOrEditActivity={handleCreateOrEditActivity}
-          activities={activities}
+          activities={activityStore.activities}
           selectedActivity={selectedActivity}
           onHandleSelectedActivity={handleSelectedActivity}
           onHandleCancelSelectedActivity={handleCancelSelectedActivity}
@@ -102,5 +98,6 @@ function App() {
     </>
   );
 }
-
-export default App;
+// Makes App component an observer so that we can observe the observables
+// Vite doesn't support HMR for class components and we're using a class in activityStore.ts
+export default observer(App);
