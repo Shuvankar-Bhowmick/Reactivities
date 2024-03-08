@@ -10,6 +10,7 @@ const sleep = (delay: number) => {
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
+// axios interceptors (one of the most important features of axios).
 axios.interceptors.response.use(async response => {
   try {
     await sleep(1000);
