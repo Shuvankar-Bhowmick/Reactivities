@@ -72,10 +72,13 @@ function App() {
     setSubmitting(false);
   }
 
-  function handleDeleteActivity(id: string) {
-    if (selectedActivity?.id === id) handleCancelSelectedActivity();
-
+  async function handleDeleteActivity(id: string) {
+    setSubmitting(true);
+    await agent.Activites.delete(id);
     setActivities(activities.filter(x => x.id !== id));
+    setSubmitting(false);
+
+    if (selectedActivity?.id === id) handleCancelSelectedActivity();
   }
   if (loading) return <LoadingComponent content="Loading app" />;
 

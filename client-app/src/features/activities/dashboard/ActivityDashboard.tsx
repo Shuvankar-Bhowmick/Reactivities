@@ -37,6 +37,7 @@ export default function ActivityDashboard({
             handleSelectedActivity={handleSelectedActivity}
             activities={activities}
             handleDeleteActivity={onHandleDeleteActivity}
+            submitting={submitting}
           />
         </List>
       </GridColumn>
