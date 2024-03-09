@@ -22,24 +22,6 @@ function App() {
     activityStore.loadActivities();
   }, [activityStore]);
 
-  function handleSelectedActivity(id: string) {
-    setSelectedActivity(activities.find(a => a.id === id));
-  }
-
-  function handleCancelSelectedActivity() {
-    setSelectedActivity(undefined);
-  }
-
-  function handleFormOpen(id?: string) {
-    console.log(id);
-    id ? handleSelectedActivity(id) : handleCancelSelectedActivity(); // is equivalent to if (id) handleSelectedActivity(id), id is NEVER null
-    setEditMode(true);
-  }
-
-  function handleFormClose() {
-    setEditMode(false);
-  }
-
   async function handleCreateOrEditActivity(activity: Activity) {
     /* using uuid() for generating a random Guid for our id property */
     setSubmitting(true);
@@ -80,17 +62,13 @@ function App() {
 
   return (
     <>
-      <NavBar onFormOpen={handleFormOpen} />
+      <NavBar />
       <Container style={{ marginTop: "7rem" }}>
         <ActivityDashboard
           onCreateOrEditActivity={handleCreateOrEditActivity}
           activities={activityStore.activities}
           selectedActivity={selectedActivity}
-          onHandleSelectedActivity={handleSelectedActivity}
-          onHandleCancelSelectedActivity={handleCancelSelectedActivity}
           editMode={editMode}
-          onFormOpen={handleFormOpen}
-          onFormClose={handleFormClose}
           onHandleDeleteActivity={handleDeleteActivity}
           submitting={submitting}
         />
