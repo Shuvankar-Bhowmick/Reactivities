@@ -12,21 +12,21 @@ import {
 } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { SyntheticEvent, useState } from "react";
+import { useStore } from "../../../app/stores/store";
 
 interface Props {
   activities: Activity[];
   submitting: boolean;
-  handleSelectedActivity: (id: string) => void;
   handleDeleteActivity: (id: string) => void;
 }
 
 export default function ActivityList({
   activities,
   submitting,
-  handleSelectedActivity,
   handleDeleteActivity,
 }: Props) {
   const [target, setTarget] = useState("");
+  const { activityStore } = useStore();
 
   function handleActivityDelete(
     e: SyntheticEvent<HTMLButtonElement>,
@@ -54,7 +54,10 @@ export default function ActivityList({
                 <Button
                   floated="right"
                   color="blue"
-                  onClick={() => handleSelectedActivity(activity.id)}
+                  onClick={() => {
+                    if (!activityStore.editMode)
+                      activityStore.selectActivity(activity.id);
+                  }}
                 >
                   View
                 </Button>

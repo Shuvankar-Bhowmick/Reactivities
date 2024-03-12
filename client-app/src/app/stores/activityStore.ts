@@ -1,8 +1,9 @@
 /* MobX is mutable so don't confuse this with redux. We can mutate the state directly here. */
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Activity } from "../models/activity";
 import agent from "../api/agent";
+import { v4 as uuid } from "uuid";
 
 export default class ActivityStore {
   // Observables
@@ -68,5 +69,45 @@ export default class ActivityStore {
 
   closeForm = () => {
     this.editMode = false;
+  };
+
+  createActivity = async (activity: Activity) => {
+    this.loading = true;
+    activity.id = uuid();
+    try {
+      await agent.Activites.create(activity);
+      runInAction(() => {
+        this.activities.push(activity);
+        this.selectedActivity = activity;
+        this.editMode = false;
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
+
+  updateActivity = async (activity: Activity) => {
+    this.loading = true;
+    try {
+      await agent.Activites.update(activity);
+      runInAction(() => {
+        this.activities = [
+          ...this.activities.filter(a => a.id !== activity.id),
+          activity,
+        ];
+        this.selectedActivity = activity;
+        this.editMode = false;
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
   };
 }
