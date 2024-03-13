@@ -13,11 +13,15 @@ import {
 import { SyntheticEvent, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
-
 export default observer(function ActivityList() {
   const { activityStore } = useStore();
-  const { activities, deleteActivity, loading, selectActivity, editMode } =
-    activityStore;
+  const {
+    activitiesByDate,
+    deleteActivity,
+    loading,
+    selectActivity,
+    editMode,
+  } = activityStore;
   const [target, setTarget] = useState("");
 
   function handleActivityDelete(
@@ -31,7 +35,7 @@ export default observer(function ActivityList() {
   return (
     <Segment>
       <ItemGroup divided>
-        {activities.map(activity => (
+        {activitiesByDate.map(activity => (
           <Item key={activity.id}>
             <ItemContent>
               <ItemHeader as="a">{activity.title}</ItemHeader>

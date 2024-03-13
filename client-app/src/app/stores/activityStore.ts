@@ -7,19 +7,24 @@ import { v4 as uuid } from "uuid";
 
 export default class ActivityStore {
   // Observables
-  activities: Activity[] = [];
+  activityRegistry = new Map<string, Activity>();
   selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
-  loadingInitial = false;
+  loadingInitial = true;
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  get activitiesByDate() {
+    return Array.from(this.activityRegistry.values()).sort(
+      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    );
+  }
+
   // Actions
   loadActivities = async () => {
-    this.setLoadingInitial(true);
     try {
       const response = await agent.Activites.list();
 
@@ -44,9 +49,9 @@ export default class ActivityStore {
   };
 
   setActivities = (response: Activity[]) => {
-    this.activities = response.map(activity => {
+    response.forEach(activity => {
       const date = activity.date.split("T")[0];
-      return { ...activity, date };
+      this.activityRegistry.set(activity.id, { ...activity, date });
     });
   };
 
@@ -55,7 +60,7 @@ export default class ActivityStore {
   };
 
   selectActivity = (id: string) => {
-    this.selectedActivity = this.activities.find(a => a.id === id);
+    this.selectedActivity = this.activityRegistry.get(id);
   };
 
   cancelSelectedActivity = () => {
@@ -77,7 +82,7 @@ export default class ActivityStore {
     try {
       await agent.Activites.create(activity);
       runInAction(() => {
-        this.activities.push(activity);
+        this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
       });
@@ -95,10 +100,7 @@ export default class ActivityStore {
     try {
       await agent.Activites.update(activity);
       runInAction(() => {
-        this.activities = [
-          ...this.activities.filter(a => a.id !== activity.id),
-          activity,
-        ];
+        this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
       });
@@ -116,9 +118,7 @@ export default class ActivityStore {
     try {
       await agent.Activites.delete(id);
       runInAction(() => {
-        this.activities = this.activities.filter(
-          activity => activity.id !== id
-        );
+        this.activityRegistry.delete(id);
 
         if (this.selectedActivity?.id === id) this.cancelSelectedActivity();
       });
