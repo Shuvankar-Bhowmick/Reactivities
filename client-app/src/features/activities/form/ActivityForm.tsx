@@ -18,6 +18,7 @@ export default observer(function ActivityForm() {
     createActivity,
     updateActivity,
   } = activityStore;
+
   const initialState = selectedActivity ?? {
     id: "",
     title: "",
@@ -32,8 +33,7 @@ export default observer(function ActivityForm() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (activity.id) createActivity(activity);
-    else updateActivity(activity);
+    activity.id ? updateActivity(activity) : createActivity(activity);
   }
 
   function handleOnChange(
