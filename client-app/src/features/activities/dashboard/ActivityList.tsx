@@ -13,15 +13,10 @@ import {
 import { SyntheticEvent, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
 export default observer(function ActivityList() {
   const { activityStore } = useStore();
-  const {
-    activitiesByDate,
-    deleteActivity,
-    loading,
-    selectActivity,
-    editMode,
-  } = activityStore;
+  const { activitiesByDate, deleteActivity, loading } = activityStore;
   const [target, setTarget] = useState("");
 
   function handleActivityDelete(
@@ -48,11 +43,12 @@ export default observer(function ActivityList() {
               </ItemDescription>
               <ItemExtra>
                 <Button
+                  as={Link}
+                  /* can also write */
+                  // to={activity.id} // Relative route
+                  to={`/activities/${activity.id}`} // Absolute route
                   floated="right"
                   color="blue"
-                  onClick={() => {
-                    if (!editMode) selectActivity(activity.id);
-                  }}
                 >
                   View
                 </Button>

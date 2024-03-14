@@ -25,6 +25,7 @@ export default class ActivityStore {
 
   // Actions
   loadActivities = async () => {
+    this.setLoadingInitial(true);
     try {
       const response = await agent.Activites.list();
 
@@ -39,8 +40,9 @@ export default class ActivityStore {
       // });
 
       /* 2. Or we can simply modularise the different steps(ticks) inside separate actions of their own */
-      this.setActivities(response);
-      this.setLoadingInitial(false);
+      response.forEach(activity => {
+        this.setActivity(activity);
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -48,32 +50,13 @@ export default class ActivityStore {
     }
   };
 
-  setActivities = (response: Activity[]) => {
-    response.forEach(activity => {
-      const date = activity.date.split("T")[0];
-      this.activityRegistry.set(activity.id, { ...activity, date });
-    });
+  setActivity = (activity: Activity) => {
+    activity.date = activity.date.split("T")[0];
+    this.activityRegistry.set(activity.id, activity);
   };
 
   setLoadingInitial = (state: boolean) => {
     this.loadingInitial = state;
-  };
-
-  selectActivity = (id: string) => {
-    this.selectedActivity = this.activityRegistry.get(id);
-  };
-
-  cancelSelectedActivity = () => {
-    this.selectedActivity = undefined;
-  };
-
-  openForm = (id?: string) => {
-    id ? this.selectActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  };
-
-  closeForm = () => {
-    this.editMode = false;
   };
 
   createActivity = async (activity: Activity) => {
@@ -119,8 +102,6 @@ export default class ActivityStore {
       await agent.Activites.delete(id);
       runInAction(() => {
         this.activityRegistry.delete(id);
-
-        if (this.selectedActivity?.id === id) this.cancelSelectedActivity();
       });
     } catch (error) {
       console.log(error);
@@ -129,5 +110,31 @@ export default class ActivityStore {
         this.loading = false;
       });
     }
+  };
+
+  loadActivity = async (id: string) => {
+    const activity = this.getActivity(id);
+    if (activity) this.selectedActivity = activity;
+    else {
+      this.setLoadingInitial(true);
+      try {
+        // await this.loadActivities();
+        const activityDetail = await agent.Activites.details(id);
+        this.setActivity(activityDetail);
+        this.setSelectedActivity(activityDetail);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setLoadingInitial(false);
+      }
+    }
+  };
+
+  private getActivity = (id: string) => {
+    return this.activityRegistry.get(id);
+  };
+
+  private setSelectedActivity = (activity: Activity) => {
+    this.selectedActivity = activity;
   };
 }
