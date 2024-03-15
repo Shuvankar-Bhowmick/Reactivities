@@ -11,7 +11,7 @@ export default class ActivityStore {
   selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
-  loadingInitial = true;
+  loadingInitial = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -114,14 +114,17 @@ export default class ActivityStore {
 
   loadActivity = async (id: string) => {
     const activity = this.getActivity(id);
-    if (activity) this.selectedActivity = activity;
-    else {
+    if (activity) {
+      this.selectedActivity = activity;
+      return activity;
+    } else {
       this.setLoadingInitial(true);
       try {
         // await this.loadActivities();
         const activityDetail = await agent.Activites.details(id);
         this.setActivity(activityDetail);
         this.setSelectedActivity(activityDetail);
+        return activityDetail;
       } catch (error) {
         console.log(error);
       } finally {

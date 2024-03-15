@@ -5,21 +5,26 @@ import {
   FormTextArea,
   Segment,
 } from "semantic-ui-react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
   const {
-    closeForm,
-    selectedActivity,
     loading,
     createActivity,
     updateActivity,
+    loadActivity,
+    loadingInitial,
   } = activityStore;
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const initialState = selectedActivity ?? {
+  const INIT = {
     id: "",
     title: "",
     category: "",
@@ -28,12 +33,21 @@ export default observer(function ActivityForm() {
     city: "",
     venue: "",
   };
+  const [activity, setActivity] = useState(INIT);
 
-  const [activity, setActivity] = useState(initialState);
+  useEffect(() => {
+    if (id) loadActivity(id).then(activity => setActivity(activity!));
+  }, [id, loadActivity]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    activity.id ? updateActivity(activity) : createActivity(activity);
+  if (loadingInitial) return <LoadingComponent />;
+
+  function handleSubmit() {
+    if (!activity.id) {
+      activity.id = uuid();
+      createActivity(activity).then(() =>
+        navigate(`/activities/${activity.id}`)
+      );
+    } else updateActivity(activity).then(() => navigate(`/activities/${activity.id}`));
   }
 
   function handleOnChange(
@@ -86,7 +100,7 @@ export default observer(function ActivityForm() {
         <Button loading={loading} floated="right" positive type="submit">
           Submit
         </Button>
-        <Button floated="right" type="button" onClick={closeForm}>
+        <Button as={Link} to="/activities" floated="right" type="button">
           Cancel
         </Button>
       </Form>
