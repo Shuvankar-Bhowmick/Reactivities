@@ -52,8 +52,10 @@ export default function ActivityListItem({ activity }: Props) {
       </Segment>
       <Segment>
         <span>
-          <Icon name="clock" /> {activity.date}
-          <Icon name="marker" /> {activity.venue}
+          <Icon name="clock" />
+          {activity.date + " "}
+          <Icon name="marker" />
+          {activity.venue}
         </span>
       </Segment>
       <Segment secondary>Attendees go here</Segment>
