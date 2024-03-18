@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import "react-calendar/dist/Calendar.css";
 import "./app/layout/styles.css";
 import { StrictMode } from "react";
 import { StoreContext, store } from "./app/stores/store";
