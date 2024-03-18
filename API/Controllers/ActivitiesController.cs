@@ -1,5 +1,7 @@
 using Application.Activities;
+using Application.Core;
 using Domain;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,9 +16,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")] //api/activities/{id}
-        public async Task<ActionResult<Activity>> GetActivity(Guid id)
+        public async Task<IActionResult> GetActivity(Guid id)
         {
-            return await Mediator.Send(new Details.Query { Id = id });
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
