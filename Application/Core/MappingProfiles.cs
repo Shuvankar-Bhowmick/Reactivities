@@ -1,3 +1,5 @@
+#nullable disable
+
 using AutoMapper;
 using Domain;
 

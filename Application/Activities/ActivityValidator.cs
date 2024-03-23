@@ -1,3 +1,5 @@
+#nullable disable
+
 using Domain;
 using FluentValidation;
 
