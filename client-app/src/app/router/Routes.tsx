@@ -1,8 +1,10 @@
-import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import ActivityForm from "../../features/activities/form/ActivityForm";
 import ActivityDetails from "../../features/activities/details/ActivityDetails";
+import TestErrors from "../../features/errors/TestError";
+import NotFound from "../../features/errors/NotFound";
 
 export const routes: RouteObject[] = [
   {
@@ -14,6 +16,9 @@ export const routes: RouteObject[] = [
       /* using keys here to make the ActivityForm components unique, and also to reset state when we naviagte from one route to a different route  */
       { path: "createActivity", element: <ActivityForm key="create" /> },
       { path: "manage/:id", element: <ActivityForm key="manage" /> },
+      { path: "errors", element: <TestErrors /> },
+      { path: "not-found", element: <NotFound /> },
+      { path: "*", element: <Navigate replace to="/not-found" /> },
     ],
   },
 ];
