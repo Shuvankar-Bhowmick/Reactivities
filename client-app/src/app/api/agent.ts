@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 import { Activity } from "../models/activity";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { router } from "../router/Routes";
 
 const sleep = (delay: number) => {
   return new Promise(resolve => {
@@ -31,7 +32,7 @@ axios.interceptors.response.use(
         toast.error("forbidden");
         break;
       case 404:
-        toast.error("not found");
+        router.navigate("/not-found");
         break;
       case 500:
         toast.error("server error");
