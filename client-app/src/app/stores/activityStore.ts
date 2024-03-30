@@ -1,9 +1,9 @@
 /* MobX is mutable so don't confuse this with redux. We can mutate the state directly here. */
 
-import { makeAutoObservable, runInAction } from "mobx";
 import { Activity } from "../models/activity";
 import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
+import { makeAutoObservable } from "mobx";
 
 export default class ActivityStore {
   // Observables
