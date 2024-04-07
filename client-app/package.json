@@ -23,12 +23,14 @@
     "react-router-dom": "^6.22.3",
     "react-toastify": "^10.0.5",
     "semantic-ui-react": "^2.1.5",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.1",
     "@types/react-dom": "^18.2.19",
     "@types/uuid": "^9.0.8",
+    "@types/yup": "^0.32.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
