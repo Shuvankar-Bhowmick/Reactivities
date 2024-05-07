@@ -10,6 +10,8 @@ import MyTextInput from '../../../app/Common/form/MyTextInput';
 import MyTextArea from '../../../app/Common/form/MyTextArea';
 import MySelectInput from '../../../app/Common/form/MySelectInput';
 import { categoryOptions } from '../../../app/Common/options/categoryOptions';
+import MyDateInput from '../../../app/Common/form/MyDateInput';
+import { Activity } from '../../../app/models/activity';
 
 export default observer(function ActivityForm() {
 	const { activityStore } = useStore();
@@ -27,11 +29,11 @@ export default observer(function ActivityForm() {
 		title: '',
 		category: '',
 		description: '',
-		date: '',
+		date: null,
 		city: '',
 		venue: '',
 	};
-	const [activity, setActivity] = useState(INIT);
+	const [activity, setActivity] = useState<Activity>(INIT);
 
 	const validationSchema = Yup.object({
 		title: Yup.string().required('The activity title is required'),
@@ -86,7 +88,13 @@ export default observer(function ActivityForm() {
 							placeholder="Category"
 							name="category"
 						/>
-						<MyTextInput name="date" placeholder="Date" type="date" />
+						<MyDateInput
+							name="date"
+							placeholderText="Date"
+							showTimeSelect
+							timeCaption="time"
+							dateFormat="MMMM d, yyyy h:mm aa"
+						/>
 						<MyTextInput name="city" placeholder="City" />
 						<MyTextInput name="venue" placeholder="Venue" />
 						<Button loading={loading} floated="right" positive type="submit">
