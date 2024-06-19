@@ -28,6 +28,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("CorsPolicy");
 
+/* First authenticate if it a validate user, if yes then authorize it. First authentication and then authorization */
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
