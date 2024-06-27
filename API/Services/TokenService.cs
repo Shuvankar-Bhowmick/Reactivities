@@ -12,6 +12,13 @@ namespace API.Services
 {
     public class TokenService
     {
+        private readonly IConfiguration _config;
+
+        public TokenService(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public string CreateToken(AppUser user)
         {
             // We put claims inside a token
@@ -29,9 +36,7 @@ namespace API.Services
             this key must be kept securely on the server and must never leave the server otherwise anybody would be able to create a token for any user as we rely on this for validation our token
             */
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    "wA2QTyMZb7ktaWdJHnxeXjqsRpEh4Sg3VvUuPLr65DFfGmBKcznwJsvuDjyBaeT64Rf3YXEH9xk8gtcmrWA2hNUbSVFQp5CGKPZzPRQnxbVBD8dCGXw2H6kaK5ZvjtfY3FEMuNzyqg4WJsmTAepc9hHb9aqfZ5kDLJ7UNPvEA6yTt4wV2gdMsrmCcp8uQBReXKY3FxGSwhtJMAqECkeZNQSu4sPBVc92j5gprHDnXx3LfRvmU8KGFTz7Yy"
-                )
+                Encoding.UTF8.GetBytes(_config.GetValue<string>("TokenKey"))
             );
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
