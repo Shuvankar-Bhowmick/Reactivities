@@ -3,6 +3,7 @@ using API.Middleware;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);

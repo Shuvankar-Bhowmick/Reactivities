@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using API.Services;
 using Domain;
@@ -25,6 +26,7 @@ namespace API.Extensions
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
+            // adding authentication
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
@@ -38,6 +40,12 @@ namespace API.Extensions
                         ValidateAudience = false
                     };
                 });
+
+            // adding authorization
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "admin"));
+            });
 
             services.AddScoped<TokenService>(); // AddScoped because the token is scoped to the http request. Token stays valid till the scope of the http request.
 
