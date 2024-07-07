@@ -15,12 +15,13 @@ namespace API.Extensions
             IConfiguration config
         )
         {
-            /* Not using this as this on also has user redirection behavior which we do not want*/
+            /* Not using this as this one also has user redirection behavior which we do not want*/
             // services.AddIdentity<>()
             services
                 .AddIdentityCore<AppUser>(opt =>
                 {
                     opt.Password.RequireNonAlphanumeric = false;
+                    opt.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<DataContext>();
 
