@@ -3,12 +3,15 @@
 */
 
 
+using System.Security.Claims;
 using API.DTOs;
 using API.Services;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace API.Controllers
 {
@@ -37,14 +40,7 @@ namespace API.Controllers
 
             if (result)
             {
-                var response = new UserDto
-                {
-                    DisplayName = user.UserName,
-                    Image = null,
-                    Token = _tokenService.CreateToken(user),
-                    Username = user.UserName
-                };
-                return Ok(response);
+                return CreateUserObject(user);
             }
 
             return Unauthorized();
@@ -70,20 +66,37 @@ namespace API.Controllers
                 DisplayName = registerDto.DisplayName
             };
 
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (result.Succeeded)
             {
-                return new UserDto
-                {
-                    Username = user.UserName,
-                    DisplayName = user.DisplayName,
-                    Image = null,
-                    Token = _tokenService.CreateToken(user)
-                };
+                return CreateUserObject(user);
             }
 
             return BadRequest(result.Errors);
+        }
+
+        /* we want to fetch the email from our user token claims. */
+        /* There are multiple ways to do it but one of the ways is to take hold of the User object and fetch the email from it */
+        /* In context of our api controllers that are authenticated using the token, we have a ClaimsPrincipal that is associated with our token. Using this ClaimsPrincipal we can fetch the token claims of the current user logged in. */
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+
+            return CreateUserObject(user);
+        }
+
+        private UserDto CreateUserObject(AppUser user)
+        {
+            return new UserDto
+            {
+                Username = user.UserName,
+                DisplayName = user.DisplayName,
+                Image = null,
+                Token = _tokenService.CreateToken(user)
+            };
         }
     }
 }
